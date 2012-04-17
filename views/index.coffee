@@ -1,28 +1,27 @@
 root = this
 
 $( ->
-  WIDTH = 800
-  HEIGHT = 600
+  WIDTH = window.innerWidth
+  HEIGHT = window.innerHeight
 
   VIEW_ANGLE = 45
   ASPECT = WIDTH / HEIGHT
   NEAR = 0.1
-  FAR = 10000
+  FAR = 1000
 
   $container = $("#container")
 
-  renderer = new THREE.WebGLRenderer();
-  camera = new THREE.PerspectiveCamera(
+  root.renderer = new THREE.WebGLRenderer;
+  root.camera = new THREE.PerspectiveCamera(
     VIEW_ANGLE, ASPECT, NEAR, FAR)
   root.scene = new THREE.Scene
-  scene.add(camera)
-  scene.castShadow = true
 
-  camera.position.z = 300
+  scene.add(camera)
+  camera.position.set(0, 0, 300)
   renderer.setSize(WIDTH, HEIGHT)
   $container.append(renderer.domElement)
 
-  rectangleMaterial =
+  root.rectangleMaterial =
     new THREE.MeshBasicMaterial(
         map: THREE.ImageUtils.
           loadTexture("images/sample_picture1.png")
@@ -32,20 +31,14 @@ $( ->
     new THREE.PlaneGeometry(
       160, 90, 10, 10),
     rectangleMaterial)
-
   scene.add(rectangle)
-  pointLight =
-    new THREE.PointLight(0xFFFFFF)
 
-  pointLight.position.x = 10
-  pointLight.position.y = 50
-  pointLight.position.z = 130
-  scene.add(pointLight)
+
+  scene.add( new THREE.AmbientLight( 0x202020 ) );
 
   renderer.render(scene, camera)
 
   direction = "left"
-
   frame = 0;
   update = ->
     rectangle.material.opacity -= 0.01
@@ -70,11 +63,6 @@ $( ->
 
   $(window).keypress(
     (event) ->
-      rectangle.material.opacity = 1.0
-      rectangle.position.x = 0
-      rectangle.position.y = 0
-      rectangle.position.z = 0
-
       switch(event.keyCode)
         when 97 # A
           direction = "left"
@@ -88,6 +76,13 @@ $( ->
           direction = "zoom-in"
         when 45 # -/_
           direction = "zoom-out"
+        else
+          return
+
+      rectangle.material.opacity = 1.0
+      rectangle.position.x = 0
+      rectangle.position.y = 0
+      rectangle.position.z = 0
     )
 
   requestAnimationFrame(update);
