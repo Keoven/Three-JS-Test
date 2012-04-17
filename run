@@ -1,0 +1,16 @@
+#! /usr/bin/env ruby
+
+require 'sinatra'
+require 'haml'
+require 'coffee_script'
+
+set :port, 3000
+
+get '/' do
+  haml :index, :format => :html5
+end
+
+get '/index.js' do
+  content_type 'text/javascript'
+  coffee :index
+end
